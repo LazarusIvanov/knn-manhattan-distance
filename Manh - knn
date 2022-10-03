@@ -1,0 +1,90 @@
+# манхэттенское расстояние
+import math
+import random
+from random import randint
+from matplotlib import pyplot as plt
+from matplotlib import style
+
+# задаем списки куда будем вкладывать элементы
+height_x = []
+weight_y = []
+classes = []
+results_xy = []
+j = 0
+i = 0
+
+# циклы которые задают элементы в спсики случайным образом
+for j in range(40):
+    random_numbr = randint(50, 150)
+    if j not in height_x:
+        j+=1
+        height_x.append(random_numbr)  
+    
+for j in range(40):
+    random_number = randint(50, 150)
+    if j not in weight_y:
+        j+=1
+        weight_y.append(random_number) 
+        
+foo = ('low', 'medium', 'high')
+for i in range(40):
+    spi = random.choice(foo)
+    i+=1
+    classes.append(spi) 
+
+# параметры растений, нужно найти их класс
+param_x = randint(50, 150)
+param_y = randint(50, 150)
+
+# цикл который выводит специальный коэффицент который будем наносить на график, данные вписываются в список 
+for i in range(len(height_x)):
+        results = (abs(height_x[i] - param_x) + abs(weight_y[i] - param_y))
+        i+=1
+        results_xy.append(results)
+
+# конкатенация результата (xy) и присваивание им классов, результат в списке 
+temp = min(results_xy)
+res = []
+for t in range(len(results_xy)):
+    res.append(str(results_xy[t]) + "-" + str(classes[t]))
+    t+=1
+    
+# создание кортежей с результатом и их классом и сортировка и объединение их в один список
+res_p = list(zip(results_xy, classes))
+res_p.sort()
+
+# поиск индекса минимального элемента из списка (result_xy) результат записывается в список[]
+temp = min(results_xy)
+rec = []
+for idx in range(0, len(results_xy)):
+    if temp == results_xy[idx]:
+        rec.append(idx)
+ 
+# процесс преобразования списка в число  
+rec = (str(rec)[1:-1].replace(", ", ""))
+rec = (int(rec))
+
+# переменные для точки ближайшего соседа
+knn_x = height_x[rec]
+knn_y = weight_y[rec]
+knn_cl = classes[rec]
+
+# вывод результата через цикл 
+i = 0
+f = 1
+while i<len(res_p):
+        print("Элемент сортировки:#",f,res_p[i])
+        i+=1
+        f+=1
+print("Ответ:", knn_cl)
+
+# создание графика
+plt.plot([height_x], [weight_y], 'ro')
+plt.plot([param_x], [param_y], 'ro', color = 'g')
+plt.plot([knn_x], [knn_y], 'ro', color = 'c')
+plt.axis([48, 155, 48, 155])  
+plt.xlabel('height x')
+plt.ylabel('weight y')
+plt.annotate("(сосед)", (knn_x, knn_y,))
+plt.annotate("(цель)", (param_x, param_y))
+plt.show()
